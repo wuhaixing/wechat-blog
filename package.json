@@ -1,0 +1,45 @@
+{
+  "name": "wechat-blog",
+  "version": "1.0.0",
+  "description": "与微信公众号同步的Blog系统",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack-dev-server --hot --inline",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wuhaixing/wechat-blog.git"
+  },
+  "keywords": [
+    "wechat-blog",
+    "wechat",
+    "blog"
+  ],
+  "author": "wuhaixing",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wuhaixing/wechat-blog/issues"
+  },
+  "homepage": "https://github.com/wuhaixing/wechat-blog#readme",
+  "dependencies": {
+    "react": "^15.2.1",
+    "react-hot-loader": "^1.3.0",
+    "wechat-es": "0.0.4"
+  },
+  "devDependencies": {
+    "babel-core": "^6.11.4",
+    "babel-loader": "^6.2.4",
+    "babel-preset-react": "^6.11.1",
+    "file-loader": "^0.9.0",
+    "webpack": "^1.13.1",
+    "webpack-dev-server": "^1.14.1"
+  },
+  "babel": {
+    "presets": [
+      "es2015",
+      "react"
+    ]
+  }
+}
