@@ -3,9 +3,23 @@
   <head>
     <meta charset="utf-8">
     <title>Webpack + React</title>
+    <link href="alloy-editor/assets/alloy-editor-ocean-min.css" rel="stylesheet">
+	  <style>
+      #app {
+        left: 100px;
+        position: relative;
+        top: 100px;
+      }
+    </style>
+    <script>
+      window.ALLOYEDITOR_BASEPATH = 'alloy-editor/';
+      window.CKEDITOR_BASEPATH = 'alloy-editor/';
+    </script>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app">
+      <div id="editable"></div>
+    </div>
   </body>
   <script src="app.js"></script>
 </html>

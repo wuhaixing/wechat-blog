@@ -1,3 +1,5 @@
+var CopyWebpackPlugin = require('copy-webpack-plugin');
+
 module.exports = {
   context: __dirname + "/app",
   entry: {
@@ -18,8 +20,12 @@ module.exports = {
       {
         test: /\.html$/,
         loader: "file?name=[name].[ext]",
-      },
+      }
     ],
   },
-
+  plugins: [
+      new CopyWebpackPlugin([
+          { from: '../node_modules/alloyeditor/dist' }
+      ])
+  ]
 }
