@@ -1,31 +1,18 @@
-var CopyWebpackPlugin = require('copy-webpack-plugin');
+var path = require('path');
 
 module.exports = {
-  context: __dirname + "/app",
-  entry: {
-    javascript: "./app.js",
-    html: "./index.html",
-  },
-  output: {
-    filename: "app.js",
-    path: __dirname + "/dist",
-  },
-  module: {
-    loaders: [
-      {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        loaders: ["react-hot","babel-loader"],
-      },
-      {
-        test: /\.html$/,
-        loader: "file?name=[name].[ext]",
-      }
-    ],
-  },
-  plugins: [
-      new CopyWebpackPlugin([
-          { from: '../node_modules/alloyeditor/dist' }
-      ])
-  ]
+    entry: "./app/app.js",
+    output: {
+        filename: "public/js/bundle.js",
+        sourceMapFilename: "public/js/bundle.map"
+    },
+    devtool: '#source-map',
+    module: {
+        loaders: [
+            {
+                loader: 'babel',
+                exclude: /node_modules/
+            }
+        ]
+    }
 }

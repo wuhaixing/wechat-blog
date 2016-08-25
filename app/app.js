@@ -1,12 +1,13 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import Editor from "./editor"
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import store from './store';
+import router from './router';
 
-const content = <div>
-                  <h1>请点击页面编辑</h1>
-                  <p>编辑本页内容</p>
-                </div>
+// Provider is a top-level component that wrapps our entire application, including
+// the Router. We pass it a reference to the store so we can use react-redux's
+// connect() method for Component Containers.
 ReactDOM.render(
-  <Editor container="editable" content={content}/>,
-  document.getElementById("app")
-)
+  <Provider store={store}>{router}</Provider>,
+  document.getElementById('root')
+);
