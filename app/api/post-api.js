@@ -2,6 +2,7 @@ import axios from 'axios';
 import store from '../store';
 import {
   getPostsSuccess,
+  uploadCoverSuccess,
   addPostSuccess,
   deletePostSuccess,
   getPostSuccess } from '../actions/post-actions';
@@ -28,6 +29,26 @@ export function searchPosts(query = '') {
       store.dispatch(getPostsSuccess(response.data));
       return response;
     });
+}
+
+export function uploadCover(file) {
+    var data = new FormData();
+    data.append('cover',file);
+    return axios.put('/upload', data)
+          .then(response => response.data)
+          .then(data => {
+            if(data.errcode) {
+              console.log(data.errmsg);
+            } else {
+              console.log(data);
+              store.dispatch(uploadCoverSuccess(data));
+            }
+            return data;
+          })
+          .catch(function (err) {
+            console.log(err);
+          });
+
 }
 /**
  * Add a post

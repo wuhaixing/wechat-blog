@@ -34,7 +34,7 @@ node_modules
 # bundle.js
 
 # Ignore images files
-# public/images
+public/images
 
 # Ignore temp/dev update scripts
-updates/0.0.0-*.js
+data/db.json

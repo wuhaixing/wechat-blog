@@ -6,6 +6,26 @@
 
 import express from 'express';
 import path from 'path';
+import multer from 'multer';
+import Weixin from 'wechat-es';
+import { MaterialManager } from 'wechat-es';
+
+const weixin = new Weixin({
+	appId:'wx212af6a39faa2819',
+	appSecret: 'ab0590c7f4d5fc9acbab77ac8408d9d7',
+	token:'wx212af6a39faa2819'
+})
+
+const talker = weixin.getTalker()
+const storage = multer.diskStorage({
+  destination: 'public/images/',
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname  )
+  }
+})
+
+const upload = multer({ storage: storage })
+
 const app = express();
 
 
@@ -29,7 +49,18 @@ app.get('*', function(req, res, next) {
   res.sendFile(path.resolve(__dirname, 'index.html'));
 });
 
-
+app.put("/upload", upload.single('cover'),function (req, res, next) {
+  const uploadedImg = req.file.path
+  talker.send(MaterialManager.image(uploadedImg))
+        .then(json => {
+          console.log(json)
+          res.send(json)
+        })
+        .catch(err => {
+          console.log(err);
+          res.send(err);
+        })
+});
 /**
  * Error Handling
  */

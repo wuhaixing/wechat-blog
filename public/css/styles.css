@@ -38,11 +38,12 @@ a {
  * Input
  */
 
-input[type="text"] {
-  border: 1px solid #aaa;
-  border-radius: 3px;
-  font-size: 0.7em;
-  padding: 0.5em 1em;
+.title-control {
+  background-color: transparent;
+  border-style: solid;
+  border-width: 0px 0px 0px 0px;
+  border-radius: 0px;
+  font-size: 24px;
 }
 
 input[type="text"]:focus {

@@ -5,6 +5,17 @@ import PostForm from '../views/post-form';
 import * as postApi from '../../api/post-api';
 
 const PostFormContainer = React.createClass({
+  getInitialState: function () {
+      return {
+        cover: {}
+      };
+  },
+  uploadCover: function(files) {
+    this.setState({
+      cover:files[0]
+    });
+    postApi.uploadCover(files[0])
+  },
   add: function(event) {
     event.preventDefault();
 
@@ -27,7 +38,11 @@ const PostFormContainer = React.createClass({
 
   render: function() {
     return (
-      <PostForm add={this.add} ref="child"  />
+      <PostForm add={this.add}
+        uploadCover={this.uploadCover}
+        cover={this.state.cover}
+        uploadedCover = {this.props.uploadedCover}
+        ref="child"  />
     );
   }
 
@@ -35,7 +50,8 @@ const PostFormContainer = React.createClass({
 
 const mapStateToProps = function(store) {
   return {
-    post: store.postState.post
+    post: store.postState.post,
+    uploadedCover:store.postState.uploadedCover
   };
 };
 

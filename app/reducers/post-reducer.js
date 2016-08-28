@@ -3,7 +3,8 @@ import _ from 'lodash';
 
 const initialState = {
   posts: [],
-  post: {}
+  post: {},
+  uploadedCover: {}
 };
 
 const postReducer = function(state = initialState, action) {
@@ -21,6 +22,8 @@ const postReducer = function(state = initialState, action) {
 
     case types.GET_POST_SUCCESS:
       return Object.assign({}, state, { post: action.post });
+    case types.UPLOAD_COVER_SUCCESS:
+      return Object.assign({}, state, { uploadedCover: action.uploadedCover });
     case types.ADD_POST_SUCCESS:
       return Object.assign({}, state, { post: action.post });
   }

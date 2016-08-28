@@ -20,7 +20,12 @@ export function getPostSuccess(post) {
     post
   };
 }
-
+export function uploadCoverSuccess(uploadedCover) {
+  return {
+    type: types.UPLOAD_COVER_SUCCESS,
+    uploadedCover
+  };
+}
 export function addPostSuccess(post) {
   return {
     type: types.ADD_POST_SUCCESS,

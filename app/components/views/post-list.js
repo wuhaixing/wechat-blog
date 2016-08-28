@@ -29,7 +29,7 @@ export default function(props) {
             }
           </div>
           :
-          <div className="new">
+          <div className="row text-center">
             <Link to='/posts/new'><h1>创建第一篇文章！</h1></Link>
           </div>
       }
