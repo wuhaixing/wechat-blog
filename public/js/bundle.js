@@ -47777,18 +47777,20 @@
 	}
 	
 	function uploadCover(file) {
-	  var data = new FormData();
-	  data.append('cover', file);
-	  return _axios2.default.put('/upload', data).then(function (response) {
+	  var form = new FormData();
+	  form.append('cover', file);
+	  return _axios2.default.put('/upload', form).then(function (response) {
 	    return response.data;
 	  }).then(function (data) {
 	    if (data.errcode) {
 	      console.log(data.errmsg);
+	      throw new Error(data);
 	    } else {
-	      console.log(data);
-	      _store2.default.dispatch((0, _postActions.uploadCoverSuccess)(data));
+	      return _axios2.default.post('http://localhost:3001/medias/', data);
 	    }
-	    return data;
+	  }).then(function (response) {
+	    _store2.default.dispatch((0, _postActions.uploadCoverSuccess)(response.data));
+	    return response;
 	  }).catch(function (err) {
 	    console.log(err);
 	  });
@@ -47798,7 +47800,14 @@
 	 */
 	
 	function addPost(post) {
-	  return _axios2.default.post('http://localhost:3001/posts/', post).then(function (response) {
+	  return _axios2.default.post('/add', post).then(function (response) {
+	    return response.data;
+	  }).then(function (data) {
+	    console.log(data);
+	    post.id = Date.now();
+	    post.mediaId = data.media_id;
+	    return _axios2.default.post('http://localhost:3001/posts/', post);
+	  }).then(function (response) {
 	    _store2.default.dispatch((0, _postActions.addPostSuccess)(post));
 	    return response;
 	  });
@@ -47942,7 +47951,6 @@
 	    // <SearchForm /> to see how it returns a value.
 	    var post = this.refs.child.getPost();
 	    if (post && post.title) {
-	      post.id = Date.now();
 	      postApi.addPost(post).then(function (response) {
 	        console.log(response);
 	        _reactRouter.browserHistory.push('/posts');
@@ -47997,10 +48005,12 @@
 	  getPost: function getPost() {
 	    return {
 	      "title": this.refs.title.value,
-	      "thumb_media_id": this.props.uploadedCover.media_id,
-	      "show_cover_pic": this.refs.showCoverPic.checked ? 1 : 0,
+	      "thumbMediaId": this.props.uploadedCover.media_id,
+	      "showCoverPic": this.refs.showCoverPic.checked,
 	      "author": this.refs.author.value,
-	      "content": this.refs.content.value
+	      "content": this.refs.content.value,
+	      "digest": this.refs.digest.value,
+	      "contentSourceUrl": ''
 	    };
 	  },
 	

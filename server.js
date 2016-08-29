@@ -7,6 +7,7 @@
 import express from 'express';
 import path from 'path';
 import multer from 'multer';
+import bodyParser from 'body-parser';
 import Weixin from 'wechat-es';
 import { MaterialManager } from 'wechat-es';
 
@@ -39,6 +40,7 @@ app.use(express.static(path.join(__dirname, 'public'), {
   index: false
 }));
 
+app.use(bodyParser.json());
 
 /**
  * Always serve the same HTML file for all requests
@@ -49,9 +51,27 @@ app.get('*', function(req, res, next) {
   res.sendFile(path.resolve(__dirname, 'index.html'));
 });
 
-app.put("/upload", upload.single('cover'),function (req, res, next) {
+app.put("/upload", upload.single('cover'),function (req, res) {
   const uploadedImg = req.file.path
   talker.send(MaterialManager.image(uploadedImg))
+        .then(json => {
+          console.log(json)
+          res.send(json)
+        })
+        .catch(err => {
+          console.log(err);
+          res.send(err);
+        })
+});
+
+app.post('/add',function (req, res) {
+  const article = req.body
+  console.log(article)
+  var articles = MaterialManager.addArticle(article)
+  console.log(articles)
+  const msg = MaterialManager.articles(articles)
+  console.log(msg)
+  talker.send(msg)
         .then(json => {
           console.log(json)
           res.send(json)

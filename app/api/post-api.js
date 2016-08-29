@@ -32,18 +32,21 @@ export function searchPosts(query = '') {
 }
 
 export function uploadCover(file) {
-    var data = new FormData();
-    data.append('cover',file);
-    return axios.put('/upload', data)
+    var form = new FormData();
+    form.append('cover',file);
+    return axios.put('/upload', form)
           .then(response => response.data)
           .then(data => {
             if(data.errcode) {
               console.log(data.errmsg);
+              throw new Error(data)
             } else {
-              console.log(data);
-              store.dispatch(uploadCoverSuccess(data));
+              return axios.post('http://localhost:3001/medias/',data)
             }
-            return data;
+          })
+          .then(response => {
+            store.dispatch(uploadCoverSuccess(response.data));
+            return response;
           })
           .catch(function (err) {
             console.log(err);
@@ -55,11 +58,18 @@ export function uploadCover(file) {
  */
 
 export function addPost(post) {
-  return axios.post('http://localhost:3001/posts/',post)
-    .then(response => {
-      store.dispatch(addPostSuccess(post));
-      return response;
-    });
+  return axios.post('/add',post)
+              .then(response => response.data)
+              .then(data => {
+                console.log(data);
+                post.id = Date.now();
+                post.mediaId = data.media_id;
+                return axios.post('http://localhost:3001/posts/',post)
+              })
+              .then(response => {
+                store.dispatch(addPostSuccess(post));
+                return response;
+              });
 }
 /**
  * Delete a post

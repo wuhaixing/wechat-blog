@@ -25,7 +25,6 @@ const PostFormContainer = React.createClass({
     // <SearchForm /> to see how it returns a value.
     let post = this.refs.child.getPost();
     if(post && post.title) {
-      post.id = Date.now()
       postApi.addPost(post)
               .then(response => {
                 console.log(response)
