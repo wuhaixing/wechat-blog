@@ -31,7 +31,7 @@ node_modules
 # *.min.css
 
 # Igonre built js files
-# bundle.js
+bundle.js
 
 # Ignore images files
 public/images
