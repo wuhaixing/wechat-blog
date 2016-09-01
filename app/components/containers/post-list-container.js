@@ -14,7 +14,11 @@ const PostListContainer = React.createClass({
 
   render: function() {
     return (
-      <PostList posts={this.props.posts} deletePost={postApi.deletePost} />
+      <PostList posts={this.props.posts}
+        previewPost={postApi.previewPost}
+        sendPost={postApi.sendPost}
+        deletePost={postApi.deletePost}
+        fetchPosts = {postApi.fetchPosts} />
     );
   }
 

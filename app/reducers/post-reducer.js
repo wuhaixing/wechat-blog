@@ -26,6 +26,8 @@ const postReducer = function(state = initialState, action) {
       return Object.assign({}, state, { uploadedCover: action.uploadedCover });
     case types.ADD_POST_SUCCESS:
       return Object.assign({}, state, { post: action.post });
+    case types.SEND_POST_SUCCESS:
+        return Object.assign({}, state, { post: action.post });
   }
 
   return state;

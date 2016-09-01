@@ -14,7 +14,9 @@ const UserListContainer = React.createClass({
 
   render: function() {
     return (
-      <UserList users={this.props.users} deleteUser={userApi.deleteUser} />
+      <UserList users={this.props.users}
+        deleteUser={userApi.deleteUser}
+        fetchUsers = {userApi.fetchUsers}/>
     );
   }
 

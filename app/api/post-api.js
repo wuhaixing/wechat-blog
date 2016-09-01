@@ -1,12 +1,36 @@
 import axios from 'axios';
 import store from '../store';
 import {
+  fetchPostsSuccess,
   getPostsSuccess,
   uploadCoverSuccess,
   addPostSuccess,
+  previewPostSuccess,
+  sendPostSuccess,
   deletePostSuccess,
   getPostSuccess } from '../actions/post-actions';
 
+  /**
+   * Fetch posts
+   */
+
+export function fetchPosts() {
+  return axios.get('/api/posts')
+    .then(response => {
+      var posts = response.data
+      if(posts && posts.length > 0) {
+        posts = posts.map((post,index) => {
+          post.id = index
+          return axios.post('http://localhost:3001/posts',post)
+        })
+      }
+      return posts
+    })
+    .then(posts => {
+      store.dispatch(fetchPostsSuccess(posts));
+      return posts;
+    });
+}
 /**
  * Get all posts
  */
@@ -72,15 +96,52 @@ export function addPost(post) {
               });
 }
 /**
+ * preview a post
+ */
+
+export function previewPost(mediaId,openId) {
+  return axios.post('/preview',{
+                  "mediaId":mediaId,
+                  "openId":openId,
+                })
+              .then(response => {
+                store.dispatch(previewPostSuccess(mediaId));
+                return response;
+              });
+}
+/**
+ * send a post
+ */
+
+export function sendPost(mediaId) {
+  return axios.post('/send',{"mediaId":mediaId})
+              .then(response => {
+                store.dispatch(sendPostSuccess(mediaId));
+                return response;
+              });
+}
+/**
  * Delete a post
  */
 
-export function deletePost(postId) {
-  return axios.delete('http://localhost:3001/posts/' + postId)
-    .then(response => {
-      store.dispatch(deletePostSuccess(postId));
-      return response;
-    });
+export function deletePost(post) {
+  return axios.post('/del',post)
+              .then(response => response.data)
+              .then(data => {
+                if(data.errcode === 0) {
+                    return axios.delete('http://localhost:3001/posts/' + post.id)
+                } else {
+                  throw new Error(data)
+                }
+              })
+              .then(response => {
+                store.dispatch(deletePostSuccess(post.id));
+                return response;
+              })
+              .catch(err => {
+                console.log(err.errmsg);
+              });
+
 }
 
 /**

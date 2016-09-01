@@ -27,6 +27,7 @@
     "alloyeditor": "^1.2.3",
     "axios": "^0.13.1",
     "body-parser": "^1.15.2",
+    "dotenv": "^2.0.0",
     "express": "^4.14.0",
     "fs": "0.0.1-security",
     "json-server": "^0.8.18",
@@ -39,7 +40,7 @@
     "react-redux": "^4.4.5",
     "react-router": "^2.7.0",
     "redux": "^3.5.2",
-    "wechat-es": "0.0.8"
+    "wechat-es": "0.0.12"
   },
   "devDependencies": {
     "babel-cli": "^6.11.4",

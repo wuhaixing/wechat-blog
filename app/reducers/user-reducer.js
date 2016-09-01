@@ -11,7 +11,8 @@ const initialState = {
 const userReducer = function(state = initialState, action) {
 
   switch(action.type) {
-
+    case types.FETCH_USERS_SUCCESS:
+      return Object.assign({}, state, { users: action.users });
     case types.GET_USERS_SUCCESS:
       return Object.assign({}, state, { users: action.users });
 

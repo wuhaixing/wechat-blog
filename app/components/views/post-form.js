@@ -5,12 +5,12 @@ export default React.createClass({
   getPost: function() {
     return {
       "title":this.refs.title.value,
-      "thumbMediaId" : this.props.uploadedCover.media_id,
-      "showCoverPic" : this.refs.showCoverPic.checked,
+      "thumb_media_id" : this.props.uploadedCover.media_id,
+      "show_cover_pic" : this.refs.showCoverPic.checked,
       "author":this.refs.author.value,
       "content":this.refs.content.value,
       "digest":this.refs.digest.value,
-      "contentSourceUrl":''
+      "content_source_url":''
     }
   },
 

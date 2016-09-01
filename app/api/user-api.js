@@ -1,6 +1,32 @@
 import axios from 'axios';
 import store from '../store';
-import { getUsersSuccess, deleteUserSuccess, userProfileSuccess } from '../actions/user-actions';
+import {
+  fetchUsersSuccess,
+  getUsersSuccess,
+  deleteUserSuccess,
+  userProfileSuccess } from '../actions/user-actions';
+
+/**
+ * Fetch users
+ */
+
+export function fetchUsers() {
+  return axios.get('/api/users')
+    .then(response => {
+      var userInfo = response.data
+      if(userInfo && userInfo.length > 0) {
+        userInfo = userInfo.map((user,index) => {
+          user.id = index
+          return axios.post('http://localhost:3001/users',user)
+        })
+      }
+      return userInfo
+    })
+    .then(response => {
+      store.dispatch(fetchUsersSuccess(response.data));
+      return response;
+    });
+}
 
 /**
  * Get all users

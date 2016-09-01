@@ -21,7 +21,9 @@ export default function(props) {
                       <Link to={'/posts/' + post.id}>{post.title}</Link>
                     </div>
                     <div className="controls">
-                      <button onClick={props.deletePost.bind(null, post.id)} className="btn btn-danger">删除</button>
+                      <button onClick={props.previewPost.bind(null, post.media_id)} className="btn btn-primary">预览</button>
+                      <button onClick={props.sendPost.bind(null, post.media_id)} className="btn btn-primary">群发</button>
+                      <button onClick={props.deletePost.bind(null, post)} className="btn btn-danger">删除</button>
                     </div>
                   </div>
                 );
@@ -31,6 +33,8 @@ export default function(props) {
           :
           <div className="row text-center">
             <Link to='/posts/new'><h1>创建第一篇文章！</h1></Link>
+            <span>或者</span><br/>
+            <button onClick={props.fetchPosts.bind(null)} className="btn btn-default">下载文章数据</button>
           </div>
       }
     </div>

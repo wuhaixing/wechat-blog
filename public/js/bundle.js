@@ -23106,6 +23106,8 @@
 	      return Object.assign({}, state, { uploadedCover: action.uploadedCover });
 	    case types.ADD_POST_SUCCESS:
 	      return Object.assign({}, state, { post: action.post });
+	    case types.SEND_POST_SUCCESS:
+	      return Object.assign({}, state, { post: action.post });
 	  }
 	
 	  return state;
@@ -23123,12 +23125,16 @@
 	  value: true
 	});
 	// Posts
+	var FETCH_POSTS_SUCCESS = exports.FETCH_POSTS_SUCCESS = 'FETCH_POSTS_SUCCESS';
 	var GET_POSTS_SUCCESS = exports.GET_POSTS_SUCCESS = 'GET_POSTS_SUCCESS';
 	var DELETE_POST_SUCCESS = exports.DELETE_POST_SUCCESS = 'DELETE_POST_SUCCESS';
 	var GET_POST_SUCCESS = exports.GET_POST_SUCCESS = 'GET_POST_SUCCESS';
 	var UPLOAD_COVER_SUCCESS = exports.UPLOAD_COVER_SUCCESS = 'UPLOAD_COVER_SUCCESS';
 	var ADD_POST_SUCCESS = exports.ADD_POST_SUCCESS = 'ADD_POST_SUCCESS';
+	var PREVIEW_POSTS_SUCCESS = exports.PREVIEW_POSTS_SUCCESS = 'PREVIEW_POSTS_SUCCESS';
+	var SEND_POST_SUCCESS = exports.SEND_POST_SUCCESS = 'SEND_POST_SUCCESS';
 	// Users
+	var FETCH_USERS_SUCCESS = exports.FETCH_USERS_SUCCESS = 'FETCH_USERS_SUCCESS';
 	var GET_USERS_SUCCESS = exports.GET_USERS_SUCCESS = 'GET_USERS_SUCCESS';
 	var DELETE_USER_SUCCESS = exports.DELETE_USER_SUCCESS = 'DELETE_USER_SUCCESS';
 	var USER_PROFILE_SUCCESS = exports.USER_PROFILE_SUCCESS = 'USER_PROFILE_SUCCESS';
@@ -39931,7 +39937,8 @@
 	
 	
 	  switch (action.type) {
-	
+	    case types.FETCH_USERS_SUCCESS:
+	      return Object.assign({}, state, { users: action.users });
 	    case types.GET_USERS_SUCCESS:
 	      return Object.assign({}, state, { users: action.users });
 	
@@ -45930,6 +45937,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.fetchUsers = fetchUsers;
 	exports.getUsers = getUsers;
 	exports.searchUsers = searchUsers;
 	exports.deleteUser = deleteUser;
@@ -45946,6 +45954,26 @@
 	var _userActions = __webpack_require__(293);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	/**
+	 * Fetch users
+	 */
+	
+	function fetchUsers() {
+	  return _axios2.default.get('/api/users').then(function (response) {
+	    var userInfo = response.data;
+	    if (userInfo && userInfo.length > 0) {
+	      userInfo = userInfo.map(function (user, index) {
+	        user.id = index;
+	        return _axios2.default.post('http://localhost:3001/users', user);
+	      });
+	    }
+	    return userInfo;
+	  }).then(function (response) {
+	    _store2.default.dispatch((0, _userActions.fetchUsersSuccess)(response.data));
+	    return response;
+	  });
+	}
 	
 	/**
 	 * Get all users
@@ -47365,6 +47393,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.fetchUsersSuccess = fetchUsersSuccess;
 	exports.getUsersSuccess = getUsersSuccess;
 	exports.deleteUserSuccess = deleteUserSuccess;
 	exports.userProfileSuccess = userProfileSuccess;
@@ -47374,6 +47403,13 @@
 	var types = _interopRequireWildcard(_actionTypes);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function fetchUsersSuccess(users) {
+	  return {
+	    type: types.FETCH_USERS_SUCCESS,
+	    users: users
+	  };
+	}
 	
 	function getUsersSuccess(users) {
 	  return {
@@ -47635,7 +47671,11 @@
 	  },
 	
 	  render: function render() {
-	    return _react2.default.createElement(_postList2.default, { posts: this.props.posts, deletePost: postApi.deletePost });
+	    return _react2.default.createElement(_postList2.default, { posts: this.props.posts,
+	      previewPost: postApi.previewPost,
+	      sendPost: postApi.sendPost,
+	      deletePost: postApi.deletePost,
+	      fetchPosts: postApi.fetchPosts });
 	  }
 	
 	});
@@ -47694,7 +47734,17 @@
 	            { className: 'controls' },
 	            _react2.default.createElement(
 	              'button',
-	              { onClick: props.deletePost.bind(null, post.id), className: 'btn btn-danger' },
+	              { onClick: props.previewPost.bind(null, post.media_id), className: 'btn btn-primary' },
+	              '预览'
+	            ),
+	            _react2.default.createElement(
+	              'button',
+	              { onClick: props.sendPost.bind(null, post.media_id), className: 'btn btn-primary' },
+	              '群发'
+	            ),
+	            _react2.default.createElement(
+	              'button',
+	              { onClick: props.deletePost.bind(null, post), className: 'btn btn-danger' },
 	              '删除'
 	            )
 	          )
@@ -47711,6 +47761,17 @@
 	          null,
 	          '创建第一篇文章！'
 	        )
+	      ),
+	      _react2.default.createElement(
+	        'span',
+	        null,
+	        '或者'
+	      ),
+	      _react2.default.createElement('br', null),
+	      _react2.default.createElement(
+	        'button',
+	        { onClick: props.fetchPosts.bind(null), className: 'btn btn-default' },
+	        '下载文章数据'
 	      )
 	    )
 	  );
@@ -47733,10 +47794,13 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.fetchPosts = fetchPosts;
 	exports.getPosts = getPosts;
 	exports.searchPosts = searchPosts;
 	exports.uploadCover = uploadCover;
 	exports.addPost = addPost;
+	exports.previewPost = previewPost;
+	exports.sendPost = sendPost;
 	exports.deletePost = deletePost;
 	exports.getPost = getPost;
 	
@@ -47752,6 +47816,25 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
+	/**
+	 * Fetch posts
+	 */
+	
+	function fetchPosts() {
+	  return _axios2.default.get('/api/posts').then(function (response) {
+	    var posts = response.data;
+	    if (posts && posts.length > 0) {
+	      posts = posts.map(function (post, index) {
+	        post.id = index;
+	        return _axios2.default.post('http://localhost:3001/posts', post);
+	      });
+	    }
+	    return posts;
+	  }).then(function (posts) {
+	    _store2.default.dispatch((0, _postActions.fetchPostsSuccess)(posts));
+	    return posts;
+	  });
+	}
 	/**
 	 * Get all posts
 	 */
@@ -47813,13 +47896,46 @@
 	  });
 	}
 	/**
+	 * preview a post
+	 */
+	
+	function previewPost(mediaId, openId) {
+	  return _axios2.default.post('/preview', {
+	    "mediaId": mediaId,
+	    "openId": openId
+	  }).then(function (response) {
+	    _store2.default.dispatch((0, _postActions.previewPostSuccess)(mediaId));
+	    return response;
+	  });
+	}
+	/**
+	 * send a post
+	 */
+	
+	function sendPost(mediaId) {
+	  return _axios2.default.post('/send', { "mediaId": mediaId }).then(function (response) {
+	    _store2.default.dispatch((0, _postActions.sendPostSuccess)(mediaId));
+	    return response;
+	  });
+	}
+	/**
 	 * Delete a post
 	 */
 	
-	function deletePost(postId) {
-	  return _axios2.default.delete('http://localhost:3001/posts/' + postId).then(function (response) {
-	    _store2.default.dispatch((0, _postActions.deletePostSuccess)(postId));
+	function deletePost(post) {
+	  return _axios2.default.post('/del', post).then(function (response) {
+	    return response.data;
+	  }).then(function (data) {
+	    if (data.errcode === 0) {
+	      return _axios2.default.delete('http://localhost:3001/posts/' + post.id);
+	    } else {
+	      throw new Error(data);
+	    }
+	  }).then(function (response) {
+	    _store2.default.dispatch((0, _postActions.deletePostSuccess)(post.id));
 	    return response;
+	  }).catch(function (err) {
+	    console.log(err.errmsg);
 	  });
 	}
 	
@@ -47853,17 +47969,27 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.fetchPostsSuccess = fetchPostsSuccess;
 	exports.getPostsSuccess = getPostsSuccess;
 	exports.deletePostSuccess = deletePostSuccess;
 	exports.getPostSuccess = getPostSuccess;
 	exports.uploadCoverSuccess = uploadCoverSuccess;
 	exports.addPostSuccess = addPostSuccess;
+	exports.previewPostSuccess = previewPostSuccess;
+	exports.sendPostSuccess = sendPostSuccess;
 	
 	var _actionTypes = __webpack_require__(198);
 	
 	var types = _interopRequireWildcard(_actionTypes);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function fetchPostsSuccess(posts) {
+	  return {
+	    type: types.FETCH_POSTS_SUCCESS,
+	    posts: posts
+	  };
+	}
 	
 	function getPostsSuccess(posts) {
 	  return {
@@ -47894,6 +48020,18 @@
 	function addPostSuccess(post) {
 	  return {
 	    type: types.ADD_POST_SUCCESS,
+	    post: post
+	  };
+	}
+	function previewPostSuccess(post) {
+	  return {
+	    type: types.PREVIEW_POST_SUCCESS,
+	    post: post
+	  };
+	}
+	function sendPostSuccess(post) {
+	  return {
+	    type: types.SEND_POST_SUCCESS,
 	    post: post
 	  };
 	}
@@ -48005,12 +48143,12 @@
 	  getPost: function getPost() {
 	    return {
 	      "title": this.refs.title.value,
-	      "thumbMediaId": this.props.uploadedCover.media_id,
-	      "showCoverPic": this.refs.showCoverPic.checked,
+	      "thumb_media_id": this.props.uploadedCover.media_id,
+	      "show_cover_pic": this.refs.showCoverPic.checked,
 	      "author": this.refs.author.value,
 	      "content": this.refs.content.value,
 	      "digest": this.refs.digest.value,
-	      "contentSourceUrl": ''
+	      "content_source_url": ''
 	    };
 	  },
 	
@@ -48550,9 +48688,13 @@
 	      "div",
 	      { className: "details" },
 	      _react2.default.createElement(
-	        "h1",
-	        null,
-	        props.title
+	        "a",
+	        { href: props.url },
+	        _react2.default.createElement(
+	          "h1",
+	          null,
+	          props.title
+	        )
 	      ),
 	      _react2.default.createElement(
 	        "strong",
@@ -48562,6 +48704,7 @@
 	      _react2.default.createElement(
 	        "p",
 	        null,
+	        _react2.default.createElement("img", { src: props.thumb_url, width: "900" }),
 	        props.content
 	      )
 	    )
@@ -48618,7 +48761,9 @@
 	  },
 	
 	  render: function render() {
-	    return _react2.default.createElement(_userList2.default, { users: this.props.users, deleteUser: userApi.deleteUser });
+	    return _react2.default.createElement(_userList2.default, { users: this.props.users,
+	      deleteUser: userApi.deleteUser,
+	      fetchUsers: userApi.fetchUsers });
 	  }
 	
 	});
@@ -48645,8 +48790,12 @@
 	  return _react2.default.createElement(
 	    'div',
 	    { className: 'data-list' },
-	    props.users.map(function (user) {
-	
+	    _react2.default.createElement(
+	      'button',
+	      { onClick: props.fetchUsers.bind(null), className: 'btn btn-default' },
+	      '同步用户资料'
+	    ),
+	    props.users && props.users.length > 0 ? props.users.map(function (user) {
 	      return _react2.default.createElement(
 	        'div',
 	        { key: user.id, className: 'data-list-item' },
@@ -48656,7 +48805,12 @@
 	          _react2.default.createElement(
 	            _reactRouter.Link,
 	            { to: '/users/' + user.id },
-	            user.name
+	            _react2.default.createElement('img', { src: user.headimgurl, width: '32', height: '32' }),
+	            _react2.default.createElement(
+	              'span',
+	              null,
+	              user.nickname
+	            )
 	          )
 	        ),
 	        _react2.default.createElement(
@@ -48665,11 +48819,11 @@
 	          _react2.default.createElement(
 	            'button',
 	            { onClick: props.deleteUser.bind(null, user.id), className: 'delete' },
-	            'Delete'
+	            '删除'
 	          )
 	        )
 	      );
-	    })
+	    }) : _react2.default.createElement('div', null)
 	  );
 	};
 	
