@@ -17,8 +17,8 @@ const postReducer = function(state = initialState, action) {
     case types.DELETE_POST_SUCCESS:
 
       // Use lodash to create a new post array without the post we want to remove
-      const newUsers = _.filter(state.posts, post => post.id != action.postId);
-      return Object.assign({}, state, { posts: newUsers });
+      const newPosts = _.filter(state.posts, post => post.id != action.postId);
+      return Object.assign({}, state, { posts: newPosts });
 
     case types.GET_POST_SUCCESS:
       return Object.assign({}, state, { post: action.post });

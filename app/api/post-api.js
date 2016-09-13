@@ -87,7 +87,7 @@ export function addPost(post) {
               .then(data => {
                 console.log(data);
                 post.id = Date.now();
-                post.mediaId = data.media_id;
+                post.media_id = data.media_id;
                 return axios.post('http://localhost:3001/posts/',post)
               })
               .then(response => {

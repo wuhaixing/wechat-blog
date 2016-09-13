@@ -47888,7 +47888,7 @@
 	  }).then(function (data) {
 	    console.log(data);
 	    post.id = Date.now();
-	    post.mediaId = data.media_id;
+	    post.media_id = data.media_id;
 	    return _axios2.default.post('http://localhost:3001/posts/', post);
 	  }).then(function (response) {
 	    _store2.default.dispatch((0, _postActions.addPostSuccess)(post));
